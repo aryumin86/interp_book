@@ -2,6 +2,9 @@
 
 namespace ru.aryumin.Lox {
     public static class Lox {
+
+        static bool hadError = false;
+
         public static void Main(string[] args){
             if(args.Length > 1){
                 Console.WriteLine("Usage: jlox [script]");
@@ -18,6 +21,8 @@ namespace ru.aryumin.Lox {
         private static void Runfile(string path){
             var bytes = File.ReadAllBytes(path);
             Run(System.Text.Encoding.Default.GetString(bytes));
+            if(hadError) 
+                Environment.Exit(65);
         }
 
         private static void RunPrompt(){
@@ -27,6 +32,7 @@ namespace ru.aryumin.Lox {
                 if(string.IsNullOrWhiteSpace(line))
                     break;
                 Run(line);
+                hadError = false;
             }
         }
 
@@ -37,6 +43,14 @@ namespace ru.aryumin.Lox {
             foreach(var token in tokens){
                 Console.WriteLine(token);
             }
+        }
+
+        static void Error(int line, string message){
+            Report(line, string.Empty, message);
+        }
+
+        private static void Report(int line, string where, string message){
+            Console.WriteLine($"[line {line}] Error {where}: {message}");
         }
     }
 }
