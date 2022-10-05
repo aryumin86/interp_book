@@ -45,6 +45,41 @@ namespace ru.aryumin.Lox {
             return _source[_current];
         }
 
+        private void @String() {
+            while (Peek() != '"' && !IsAtEnd()) {
+                if(Peek() == '\n') _line++;
+                Advance();
+            }
+
+            if (IsAtEnd()){
+                Lox.Error(_line, "Unterminated string");
+                return;
+            }
+
+            Advance();
+
+            var value = _source.Substring(_start + 1, _current - 1);
+            AddToken(TokenType.STRING, value);
+        }
+
+        private bool IsDigit(char c) => c >= '0' && c <= '9';
+
+        private void Number() {
+            while(IsDigit(Peek())) Advance();
+
+            if(Peek() == '.' && IsDigit(PeekNext())){
+                Advance();
+                while (IsDigit(Peek())) Advance();
+            }
+
+            AddToken(TokenType.NUMBER, Double.Parse(_source.Substring(_start, _current)));
+        }
+
+        private char PeekNext() {
+            if(_current + 1 >= _source.Length) return '\0';
+            return _source[_current+1];
+        }
+
         private void ScanToken(){
             var c = Advance();
             switch (c) {
@@ -78,8 +113,16 @@ namespace ru.aryumin.Lox {
                     break;
 
                 case '\n': _line++; break;
+
+                case '"': @String(); break;
+
                 default: 
-                    Lox.Error(_line, "Unexpected charcter");
+                    if(IsDigit(c)){
+                        Number();
+                    }
+                    else{
+                        Lox.Error(_line, "Unexpected charcter");
+                    }
                     break;
             }
         }
