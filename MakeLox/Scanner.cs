@@ -9,6 +9,28 @@ namespace ru.aryumin.Lox {
         private int _current = 0;
         private int _line = 1;
 
+        private static readonly Dictionary<string, TokenType> _keywords;
+
+        static Scanner() {
+            _keywords = new Dictionary<string, TokenType>();
+            _keywords.Add("and", TokenType.AND);
+            _keywords.Add("class", TokenType.CLASS);
+            _keywords.Add("else", TokenType.ELSE);
+            _keywords.Add("false", TokenType.FALSE);
+            _keywords.Add("for", TokenType.FOR);
+            _keywords.Add("fun", TokenType.FUN);
+            _keywords.Add("if", TokenType.IF);
+            _keywords.Add("nil", TokenType.NIL);
+            _keywords.Add("or", TokenType.OR);
+            _keywords.Add("print", TokenType.PRINT);
+            _keywords.Add("return", TokenType.RETURN);
+            _keywords.Add("super", TokenType.SUPER);
+            _keywords.Add("this", TokenType.THIS);
+            _keywords.Add("true", TokenType.TRUE);
+            _keywords.Add("var", TokenType.VAR);
+            _keywords.Add("while", TokenType.WHILE);
+        }
+
         public Scanner(string source)
         {
             _source = source;
@@ -80,6 +102,19 @@ namespace ru.aryumin.Lox {
             return _source[_current+1];
         }
 
+        private bool IsAlpha(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+        private bool IsAlphaNumeric(char c) => IsAlpha(c) || IsDigit(c);
+
+        private void Identifier() {
+            while (IsAlphaNumeric(Peek())) Advance();
+            var text = _source.Substring(_start, _current);
+            // type will be changed if keywords dictionary contains this key
+            TokenType tokenType = TokenType.IDENTIFIER; 
+            if(_keywords.TryGetValue(text, out TokenType parsedTokenType)) // may be this is keyword
+                tokenType = parsedTokenType;
+            AddToken(tokenType);
+        }
+
         private void ScanToken(){
             var c = Advance();
             switch (c) {
@@ -119,6 +154,9 @@ namespace ru.aryumin.Lox {
                 default: 
                     if(IsDigit(c)){
                         Number();
+                    }
+                    else if(IsAlpha(c)) {
+                        Identifier();
                     }
                     else{
                         Lox.Error(_line, "Unexpected charcter");
