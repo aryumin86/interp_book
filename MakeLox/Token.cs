@@ -16,7 +16,7 @@ namespace ru.aryumin.Lox {
         }
 
         public override string ToString(){
-            return $"{TokenType} {Lexeme} {Literal}";
+            return $"TokenType: {TokenType} Lexeme:{Lexeme} Literal:{Literal}";
         }        
     }
 }
