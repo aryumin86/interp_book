@@ -10,11 +10,11 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MakeLox/bin/Debug/net7.0/MakeLox.dll",
+            "program": "${workspaceFolder}/MakeLox/bin/Debug/net6.0/MakeLox.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MakeLox",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            "console": "integratedTerminal", //"internalConsole",
             "stopAtEntry": false
         },
         {

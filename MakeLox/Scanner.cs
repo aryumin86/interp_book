@@ -50,7 +50,7 @@ namespace ru.aryumin.Lox {
 
         private void AddToken(TokenType tokenType) => AddToken(tokenType, null);
         private void AddToken(TokenType tokenType, object literal){
-            var text = _source.Substring(_start, _current);
+            var text = _source[_start .. _current];
             _tokens.Add(new Token(tokenType, text, literal, _line));
         }
 
@@ -80,7 +80,7 @@ namespace ru.aryumin.Lox {
 
             Advance();
 
-            var value = _source.Substring(_start + 1, _current - 1);
+            var value = _source[(_start+1)..(_current-1)];
             AddToken(TokenType.STRING, value);
         }
 
@@ -94,7 +94,7 @@ namespace ru.aryumin.Lox {
                 while (IsDigit(Peek())) Advance();
             }
 
-            AddToken(TokenType.NUMBER, Double.Parse(_source.Substring(_start, _current)));
+            AddToken(TokenType.NUMBER, Double.Parse(_source[_start .. _current]));
         }
 
         private char PeekNext() {
@@ -107,7 +107,7 @@ namespace ru.aryumin.Lox {
 
         private void Identifier() {
             while (IsAlphaNumeric(Peek())) Advance();
-            var text = _source.Substring(_start, _current);
+            var text = _source[_start .._current];
             // type will be changed if keywords dictionary contains this key
             TokenType tokenType = TokenType.IDENTIFIER; 
             if(_keywords.TryGetValue(text, out TokenType parsedTokenType)) // may be this is keyword
