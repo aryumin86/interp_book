@@ -22,6 +22,7 @@ public static class Program {
         var sb = new StringBuilder();
         sb.AppendLine("using System;");
         sb.AppendLine("using ru.aryumin.Lox;");
+        sb.AppendLine();
         sb.AppendLine("namespace ru.aryumin.Lox {");
         sb.AppendLine();
         sb.AppendLine($"\tpublic abstract class {baseName} {{");
