@@ -25,8 +25,13 @@ public static class Program {
         sb.AppendLine();
         sb.AppendLine("namespace ru.aryumin.Lox {");
         sb.AppendLine();
-        sb.AppendLine($"\tpublic abstract class {baseName} {{");
+        sb.AppendLine($"\tpublic abstract class {baseName} {{");     
+        sb.AppendLine();
+        sb.AppendLine("\t\tpublic abstract R Accept<R>(Visitor<R> visitor);"); 
         sb.AppendLine("\t}");
+        sb.AppendLine();
+
+        DefineVisitor(sb, baseName, types);
 
         foreach(var type in types){
             var className = type.Split(':')[0].Trim();
@@ -36,6 +41,15 @@ public static class Program {
         
         sb.AppendLine("}");
         File.WriteAllText(path, sb.ToString());
+    }
+
+    private static void DefineVisitor(StringBuilder sb, string baseName, IEnumerable<string> types){
+        sb.AppendLine("\tpublic interface Visitor<R> {");
+        foreach(var t in types){
+            var typeName = t.Split(':')[0].Trim();
+            sb.AppendLine($"\t\t R Visit{typeName + baseName}({typeName} {baseName.ToLowerInvariant()});");            
+        }
+        sb.AppendLine("\t}");
     }
 
     private static void DefineType(StringBuilder sb, string baseName, string className, string fieldsList){
@@ -62,7 +76,10 @@ public static class Program {
                 : char.ToUpper(fName[0]) + fName.Substring(1);
             sb.AppendLine($"\t\t\t{propName} = {fName};");
         }
-        sb.AppendLine("\t\t}");        
+        sb.AppendLine("\t\t}"); 
+        sb.AppendLine($"\t\tpublic override R Accept<R>(Visitor<R> visitor){{");
+        sb.AppendLine($"\t\t\treturn visitor.Visit{className + baseName}(this);");
+        sb.AppendLine("\t\t}");    
         sb.AppendLine("\t}");
         sb.AppendLine();
     }
