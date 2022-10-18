@@ -1,5 +1,6 @@
 using ru.aryumin.Lox;
 
+/*
 public abstract class Expr {
     
 }
@@ -17,3 +18,4 @@ public class Binary : Expr {
         Right = right;
     }
 }
+*/

@@ -1,7 +1,22 @@
 ﻿using System;
 using System.Text;
+using ru.aryumin.Lox;
+
 public static class Program {
     public static void Main(string[] args){
+        
+        
+            Expr expression = new Binary(
+                new Unary(
+                    new Token(TokenType.MINUS, "-", null, 1),
+                    new Literal(123)),
+                new Token(TokenType.STAR, "*", null, 1),
+                new Grouping(new Literal(45.67)));
+
+            Console.WriteLine(new AstPrinter().Print(expression));
+
+        // Generating classes
+        /*
         if(args.Length != 1){
             Console.WriteLine("Uasge: dotnet run -- generate_ast <output directory>");
             Environment.Exit(64);
@@ -13,6 +28,7 @@ public static class Program {
             "Literal : object value",
             "Unary : Token @operator, Expr right"
         });
+        */
     }
 
     private static void DefineAst(string outputDir, string baseName, IEnumerable<string> types){
