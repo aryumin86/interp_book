@@ -1,7 +1,7 @@
 using System;
-using ru.aryumin.Lox;
+using ru.aryumin.Lox.AstGenerator;
 
-namespace ru.aryumin.Lox {
+namespace ru.aryumin.Lox.AstGenerator {
 
 	public abstract class Expr {
 

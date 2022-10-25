@@ -2,10 +2,10 @@ using System;
 using System.Text;
 using ru.aryumin.Lox;
 
-namespace ru.aryumin.Lox {
+namespace ru.aryumin.Lox.AstGenerator {
     public class AstPrinter : Visitor<string>
     {
-        public string Print(Expr expr){
+        public string Print(ru.aryumin.Lox.AstGenerator.Expr expr){
             return expr.Accept(this);
         }
 

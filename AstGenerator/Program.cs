@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Text;
-using ru.aryumin.Lox;
+//using ru.aryumin.Lox.AstGenerator;
 
 public static class Program {
     public static void Main(string[] args){
         
         
-            Expr expression = new Binary(
-                new Unary(
-                    new Token(TokenType.MINUS, "-", null, 1),
-                    new Literal(123)),
-                new Token(TokenType.STAR, "*", null, 1),
-                new Grouping(new Literal(45.67)));
+            ru.aryumin.Lox.AstGenerator.Expr expression = new ru.aryumin.Lox.AstGenerator.Binary(
+                new ru.aryumin.Lox.AstGenerator.Unary(
+                    new ru.aryumin.Lox.Token(ru.aryumin.Lox.TokenType.MINUS, "-", null, 1),
+                    new ru.aryumin.Lox.AstGenerator.Literal(123)),
+                new ru.aryumin.Lox.Token(ru.aryumin.Lox.TokenType.STAR, "*", null, 1),
+                new ru.aryumin.Lox.AstGenerator.Grouping(new ru.aryumin.Lox.AstGenerator.Literal(45.67)));
 
-            Console.WriteLine(new AstPrinter().Print(expression));
+            Console.WriteLine(new ru.aryumin.Lox.AstGenerator.AstPrinter().Print(expression));
 
         // Generating classes
         /*
