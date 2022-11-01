@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Text;
-//using ru.aryumin.Lox.AstGenerator;
+using ru.aryumin.Lox;
 
 public static class Program {
     public static void Main(string[] args){
-        
-        
+
             ru.aryumin.Lox.AstGenerator.Expr expression = new ru.aryumin.Lox.AstGenerator.Binary(
                 new ru.aryumin.Lox.AstGenerator.Unary(
-                    new ru.aryumin.Lox.Token(ru.aryumin.Lox.TokenType.MINUS, "-", null, 1),
+                    new Token(ru.aryumin.Lox.TokenType.MINUS, "-", null, 1),
                     new ru.aryumin.Lox.AstGenerator.Literal(123)),
-                new ru.aryumin.Lox.Token(ru.aryumin.Lox.TokenType.STAR, "*", null, 1),
+                new Token(ru.aryumin.Lox.TokenType.STAR, "*", null, 1),
                 new ru.aryumin.Lox.AstGenerator.Grouping(new ru.aryumin.Lox.AstGenerator.Literal(45.67)));
 
             Console.WriteLine(new ru.aryumin.Lox.AstGenerator.AstPrinter().Print(expression));

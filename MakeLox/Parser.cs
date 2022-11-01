@@ -9,6 +9,15 @@ namespace ru.aryumin.Lox {
             _tokens = tokens.ToArray();
         }
 
+        public Expr Parse() {
+            try{
+                return Expression();
+            }
+            catch(ParseError error){
+                return null;
+            }
+        }
+
         private Expr Expression(){
             return Equality();
         }
@@ -120,7 +129,7 @@ namespace ru.aryumin.Lox {
                 return new Grouping(expr);
             }
 
-            throw new Exception("Fffffffffffffff...");
+            throw new Exception(Peek() + "Expect expression");
         }
 
         private Token Consume(TokenType tokenType, string message)

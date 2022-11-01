@@ -1,12 +1,11 @@
-using System;
-using ru.aryumin.Lox.AstGenerator;
-
 namespace ru.aryumin.Lox.AstGenerator {
 
 	public abstract class Expr {
 
 		public abstract R Accept<R>(Visitor<R> visitor);
 	}
+	
+
 
 	public interface Visitor<R> {
 		 R VisitBinaryExpr(Binary expr);
@@ -14,6 +13,7 @@ namespace ru.aryumin.Lox.AstGenerator {
 		 R VisitLiteralExpr(Literal expr);
 		 R VisitUnaryExpr(Unary expr);
 	}
+	
 	public class Binary : Expr {
 
 		public Expr Left {get; set;}
@@ -63,5 +63,4 @@ namespace ru.aryumin.Lox.AstGenerator {
 			return visitor.VisitUnaryExpr(this);
 		}
 	}
-
 }

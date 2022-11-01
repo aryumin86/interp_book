@@ -39,10 +39,17 @@ namespace ru.aryumin.Lox {
         private static void Run(string source){
             Scanner scanner = new Scanner(source);
             IEnumerable<Token> tokens = scanner.ScanTokens();
+            var parser = new Parser(tokens);
+            Expr expression = parser.Parse();
 
-            foreach(var token in tokens){
-                Console.WriteLine(token);
-            }
+            Console.WriteLine(hadError);
+            if(hadError) return;
+
+            //foreach(var token in tokens){
+            //    Console.WriteLine(token);
+            //}
+
+            Console.WriteLine(new AstPrinter().Print(expression));
         }
 
         public static void Error(int line, string message){
