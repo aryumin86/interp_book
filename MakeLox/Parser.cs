@@ -1,3 +1,5 @@
+using System;
+
 namespace ru.aryumin.Lox {
     public class Parser {
         private readonly Token[] _tokens;
@@ -64,20 +66,95 @@ namespace ru.aryumin.Lox {
 
 
         // Just for fun (as alternative for Comparison(), Equality(), Term() etc)
-        private Expr ParseOperators<T>(IEnumerable<TokenType> operators, Func<T> exprCreatorFn) where T: Expr, new(){
-            Expr expr = Term();
+        private Expr ParseOperators(IEnumerable<TokenType> operators, Func<Expr> exprCreatorFn){
+            Expr expr = exprCreatorFn();
             while(Match(operators.ToArray())){
                 Token @operator = Previous();
                 Expr right = exprCreatorFn();
                 expr = new Binary(expr, @operator, right);
             }
-
             return expr;
         }
 
         private Expr Term()
         {
-            throw new NotImplementedException();
+            Expr expr = Factor();
+            while(Match(TokenType.MINUS, TokenType.PLUS)){
+                Token @operator = Previous();
+                Expr right = Factor();
+                expr = new Binary(expr, @operator, right);
+            }
+            return expr;
         }
+
+        private Expr Factor()
+        {
+            Expr expr = this.Unary();
+            while(Match(TokenType.SLASH, TokenType.STAR)){
+                Token @operator = Previous();
+                Expr right = this.Unary();
+                expr = new Binary(expr, @operator, right);
+            }
+            return expr;
+        }
+
+        private Expr Unary()
+        {
+            if(Match(TokenType.BANG, TokenType.MINUS)){
+                Token @operator = Previous();
+                Expr right = this.Unary();
+                return new Unary(@operator, right);
+            }
+            return Primary();
+        }
+
+        private Expr Primary()
+        {
+            if(Match(TokenType.FALSE)) return new Literal(false);
+            if(Match(TokenType.TRUE)) return new Literal(true);
+            if(Match(TokenType.NIL)) return new Literal(null);
+            if(Match(TokenType.NUMBER, TokenType.STRING)) return new Literal(Previous().Literal);
+            if(Match(TokenType.LEFT_PAREN)){
+                Expr expr = Expression();
+                Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
+                return new Grouping(expr);
+            }
+
+            throw new Exception("Fffffffffffffff...");
+        }
+
+        private Token Consume(TokenType tokenType, string message)
+        {
+            if(Check(tokenType)) return Advance();
+            throw Error(Peek(), message);
+        }
+
+        private ParseError Error(Token token, string message){
+            Lox.Error(token, message);
+            return new ParseError();
+        }
+
+        private void Syncronyze() {
+            Advance();
+            while(!IsAtEnd()){
+                if(Previous().TokenType == TokenType.SEMICOLON) return;
+                switch(Peek().TokenType){
+                    case TokenType.CLASS:
+                    case TokenType.FOR:
+                    case TokenType.FUN:
+                    case TokenType.IF:
+                    case TokenType.PRINT:
+                    case TokenType.RETURN:
+                    case TokenType.VAR:
+                    case TokenType.WHILE:
+                        return;
+                }
+                Advance();
+            }
+        }
+    }
+
+    public class ParseError : Exception {
+
     }
 }
